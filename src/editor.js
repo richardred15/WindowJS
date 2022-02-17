@@ -1,15 +1,15 @@
 let winjs;
-let win;
-let win2;
+let previewWindow;
+
+let previewElement; // = document.getElementById("previewElement");
 
 window.onload = function () {
+    previewElement = document.getElementById("previewElement");
     winjs = new WindowJS();
-    winjs.onload = function () {
-        win = winjs.newWindow("Cakewalk", 100, 100);
-        document.body.appendChild(win.windowElement);
-
-        win2 = winjs.newWindow("Not so Fast", 200, 200);
-        document.body.appendChild(win2.windowElement);
+    winjs.onload = () => {
+        previewWindow = winjs.newWindow("Testing");
+        console.log(previewWindow.rawHTML);
+        previewElement.innerHTML = previewWindow.rawHTML;
     }
 }
 
