@@ -13,6 +13,7 @@ There's a lot coming with this code base, I just have to actually write it all.
 - [ ] GUI Editor
     - [ ] Click/Drag elements onto graphical preview
     - [ ] Complex griding system
+    - [ ] Generate Javascript for copy/paste into project
 - [ ] Refactor Global Code
 - [x] Window Movement
 - [x] Maximize
