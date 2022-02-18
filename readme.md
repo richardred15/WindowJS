@@ -11,7 +11,7 @@ There's a lot coming with this code base, I just have to actually write it all.
     - Etc.
 - GUI Editor
 
-![Initial Screenshot](https://photos.app.goo.gl/z7HxhSnPBCjoHRxW9)
+![Initial Screenshot](https://lh3.googleusercontent.com/v7BoUFXsUCu0gQdb3ckGhIlhReA0rBs_iAqP1neFJmFv6hpB3jJIigAD8JqF941ORnfUpN6eJoeRHb1xGOszxpKL1Pr2OBIttIWXdNyOZr2cKsJngYL9rD53zGOTBrFpvruUBBjVyw=w2400)
 
 ```javascript
 let winjs = new WindowJS();
