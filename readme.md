@@ -7,9 +7,13 @@ There's a lot coming with this code base, I just have to actually write it all.
 - [ ] Window Element API
     - [ ] Buttons
     - [ ] Select
+        - [ ] Custom Select dropdowns
     - [ ] Text/Password
     - [ ] Etc.
 - [ ] GUI Editor
+    - [ ] Click/Drag elements onto graphical preview
+    - [ ] Complex griding system
+- [ ] Refactor Global Code
 - [x] Window Movement
 - [x] Maximize
 - [x] Minimize
