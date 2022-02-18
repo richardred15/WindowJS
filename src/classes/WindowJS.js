@@ -12,6 +12,7 @@ class WindowJS {
 
         this.dragging = false;
         this.pointerdown = false;
+        this.lastClickTime = 0;
         /**
          * @type {Window}
          */
@@ -33,9 +34,14 @@ class WindowJS {
                 y: e.clientY
             };
             for (let window of this.windows) {
-                if (window.isTitleBarClick(e.target)) {
+                if (!window.minimized && window.isTitleBarClick(e.target)) {
                     this.selectedWindow = window;
+                } else if (window.minimized) {
+                    window.toggleMinimized();
                 }
+            }
+            if (this.lastClickTime == 0) {
+                this.lastClickTime = Date.now();
             }
             e.preventDefault();
         });
@@ -53,6 +59,13 @@ class WindowJS {
         window.addEventListener("pointermove", (e) => {
             if (this.pointerdown && !this.dragging) {
                 this.dragging = true;
+                if (this.selectedWindow && this.selectedWindow.maximized) {
+                    this.selectedWindow.toggleMaximized();
+                    /* let diff = (window.innerWidth - e.clientX) / window.innerWidth;
+                    let x = e.clientX - (this.selectedWindow.width - (this.selectedWindow.width * diff));
+                    console.log(diff, x); */
+                    this.selectedWindow.setLocation(e.clientX - (this.selectedWindow.width / 2), e.clientY - 15);
+                }
             } else if (this.dragging) {
                 if (this.selectedWindow) {
                     this.selectedWindow.dragStart();
@@ -73,6 +86,14 @@ class WindowJS {
                 this.selectedWindow.dragStop();
                 this.selectedWindow = null;
             }
+            if (Date.now() - this.lastClickTime < 300) {
+                for (let window of this.windows) {
+                    if (!window.minimized && window.isTitleBarClick(e.target)) {
+                        window.toggleMaximized();
+                    }
+                }
+            }
+            this.lastClickTime = Date.now();
             e.preventDefault();
         });
     }

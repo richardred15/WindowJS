@@ -15,6 +15,8 @@ class Window {
         this.windowElement = document.createElement("div");
 
         this.dragged = false;
+        this.minimized = false;
+        this.maximized = false;
     }
 
     dragStart() {
@@ -37,18 +39,23 @@ class Window {
         this.updateSize();
     }
 
+    center() {
+        this.setLocation((window.innerWidth / 2) - (this.width / 2), (window.innerHeight / 2) - (this.height / 2))
+    }
+
     setLocationRelative(dX, dY) {
-        this.x += dX;
-        this.y += dY;
-        this.updateLocation();
-        this.onmove();
+        this.setLocation(this.x + dX, this.y + dY);
     }
 
     setLocation(x, y) {
-        this.x = x;
-        this.y = y;
-        this.updateLocation();
-        this.onmove();
+        if (x >= 0 && x + this.width <= window.innerWidth) {
+            if (y >= 0 && y + this.height <= window.innerHeight) {
+                this.x = x;
+                this.y = y;
+                this.updateLocation();
+                this.onmove();
+            }
+        }
     }
 
     updateLocation() {
@@ -84,6 +91,11 @@ class Window {
         this.windowElement = tempDiv.firstChild;
         this.titleBarElement = this.windowElement.getElementsByClassName("windowJSTitleBar")[0];
         this.body = this.windowElement.getElementsByClassName("windowJSContent")[0];
+        this.closeButton = this.windowElement.querySelector(".windowJSTitleBarControl.close");
+        this.minimizeButton = this.windowElement.querySelector(".windowJSTitleBarControl.minimize");
+        this.maximizeButton = this.windowElement.querySelector(".windowJSTitleBarControl.maximize");
+
+        this.attachListeners();
     }
 
     setTemplates(rawTemplateHTML, rawContentHTML) {
@@ -91,6 +103,36 @@ class Window {
         this.rawContentHTML = rawContentHTML;
 
         this.buildElement();
+    }
+
+    attachListeners() {
+        let thisWindow = this;
+        this.minimizeButton.addEventListener("click", (e) => {
+            this.toggleMinimized();
+            //thisWindow.windowElement.toggleClass("minimized");
+        });
+        this.maximizeButton.addEventListener("click", (e) => {
+            this.toggleMaximized();
+            //thisWindow.windowElement.toggleClass("maximized");
+        });
+    }
+
+    toggleMinimized() {
+        if (this.minimized) {
+            this.windowElement.removeClass("minimized");
+        } else {
+            this.windowElement.addClass("minimized");
+        }
+        this.minimized = !this.minimized;
+    }
+
+    toggleMaximized() {
+        if (this.maximized) {
+            this.windowElement.removeClass("maximized");
+        } else {
+            this.windowElement.addClass("maximized");
+        }
+        this.maximized = !this.maximized;
     }
 
     buildTemplate() {

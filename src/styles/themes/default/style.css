@@ -6,6 +6,8 @@ html {
     font-family: sans-serif;
     width: 100vw;
     height: 100vh;
+    background-size: cover;
+    background-image: url(https://wallpaperaccess.com/full/721217.jpg);
     overflow: hidden;
 }
 
@@ -38,7 +40,7 @@ html {
 }
 
 .windowJSWindow {
-    --border-thickness: 3px;
+    --border-thickness: 2px;
     --border-color: rgb(175, 175, 175);
 
     display: grid;
@@ -53,12 +55,13 @@ html {
     /*     border: 5px solid darkslategray; */
     /* padding: 5px;
     background-color: darkslateblue; */
-    background-color: var(--border-color);
+    background-color: rgb(98, 98, 98);
     box-shadow:
         /* inset 0 0 5px rgba(0, 0, 0, 0.9), */
         10px 10px 20px 0px rgba(0, 0, 0, 0.5);
     transition: all 0.6s ease, opacity 0.8s ease-out;
-
+    border-radius: 8px;
+    overflow: hidden;
 
 
     -webkit-touch-callout: none;
@@ -133,6 +136,7 @@ html {
     grid-column: 3;
     grid-row: 1;
     cursor: nesw-resize;
+    left: -3px;
 }
 
 .windowJSWindowBorder.bottomleft {
@@ -141,6 +145,7 @@ html {
     grid-column: 1;
     grid-row: 4;
     cursor: nesw-resize;
+    bottom: 5px;
 }
 
 .windowJSWindowBorder.bottomright {
@@ -149,13 +154,26 @@ html {
     grid-column: 3;
     grid-row: 4;
     cursor: nwse-resize;
+    bottom: 5px;
+    left: -3px;
 }
 
 .windowJSWindow.minimized {
-    bottom: 47px !important;
-    height: 37px !important;
+    bottom: 46px !important;
+    height: 47px !important;
+    width: 195px !important;
     top: calc(100vh - 47px) !important;
     overflow: hidden !important;
+}
+
+.windowJSWindow.minimized .windowJSWindowBorder {
+    opacity: 0;
+}
+
+.windowJSWindowBorder.corner {
+    position: relative;
+    width: 5px;
+    height: 5px;
 }
 
 .windowJSWindow.maximized {
@@ -178,6 +196,7 @@ html {
     grid-template-columns: auto auto 100px;
     cursor: move;
     touch-action: none;
+    border-radius: 4px 4px 4px 4px;
 }
 
 .windowJSTitleBarTitle {
@@ -222,6 +241,7 @@ html {
     background-color: rgb(98, 98, 98);
     grid-column: 2;
     grid-row: 3;
+    border-radius: 0px 0px 8px 8px;
 }
 
 .windowJSSelectContainer {
@@ -238,6 +258,12 @@ html {
 
 .windowJSSelect.open {
     height: 114px;
+}
+
+.windowJSSelectTitle::after {
+    content: '▼';
+    position: absolute;
+    right: 10px;
 }
 
 .windowJSSelect div {
