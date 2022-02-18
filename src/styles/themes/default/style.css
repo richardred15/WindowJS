@@ -79,6 +79,10 @@ html {
                                   supported by Chrome, Edge, Opera and Firefox */
 }
 
+.windowJSWindow.focused {
+    z-index: 10001;
+}
+
 .windowJSWindow.dragging {
     transition: none !important;
 }

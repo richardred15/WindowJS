@@ -26,16 +26,32 @@ class WindowJS {
         this.attachListeners();
     }
 
+    focusWindow(index) {
+        for (let window of this.windows) {
+            window.windowElement.removeClass("focused");
+        }
+        this.windows[index].windowElement.addClass("focused");
+    }
+
     attachListeners() {
         window.addEventListener("pointerdown", (e) => {
+
             this.pointerdown = true;
             this.mousePosition = {
                 x: e.clientX,
                 y: e.clientY
             };
-            for (let window of this.windows) {
-                if (!window.minimized && window.isTitleBarClick(e.target)) {
-                    this.selectedWindow = window;
+            for (let w in this.windows) {
+                let window = this.windows[w];
+                if (!window.minimized) {
+                    if (window.isClicked(e.target)) {
+                        if (window.isTitleBarClick(e.target)) {
+                            this.selectedWindow = window;
+                        } else {
+
+                        }
+                        this.focusWindow(w);
+                    }
                 } else if (window.minimized) {
                     window.toggleMinimized();
                 }
@@ -43,7 +59,7 @@ class WindowJS {
             if (this.lastClickTime == 0) {
                 this.lastClickTime = Date.now();
             }
-            e.preventDefault();
+
         });
 
         window.addEventListener("blur", (e) => {
@@ -53,10 +69,11 @@ class WindowJS {
                 this.selectedWindow.dragStop();
                 this.selectedWindow = null;
             }
-            e.preventDefault();
+
         });
 
         window.addEventListener("pointermove", (e) => {
+
             if (this.pointerdown && !this.dragging) {
                 this.dragging = true;
                 if (this.selectedWindow && this.selectedWindow.maximized) {
@@ -76,7 +93,7 @@ class WindowJS {
                 x: e.clientX,
                 y: e.clientY
             };
-            e.preventDefault();
+
         });
 
         window.addEventListener("pointerup", (e) => {
@@ -94,7 +111,7 @@ class WindowJS {
                 }
             }
             this.lastClickTime = Date.now();
-            e.preventDefault();
+
         });
     }
 
