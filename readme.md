@@ -1,7 +1,8 @@
 ## Window.js
-----
 There's a lot coming with this code base, I just have to actually write it all.
 ----
+
+WindowJS is a desktop style Window generator in the web browser
 
 - [ ] Window resizing
 - [ ] Window Element API
