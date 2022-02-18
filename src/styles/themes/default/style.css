@@ -257,7 +257,7 @@ html {
 }
 
 .windowJSSelect.open {
-    height: 114px;
+    height: auto;
 }
 
 .windowJSSelectTitle::after {

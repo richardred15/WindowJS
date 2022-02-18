@@ -7,7 +7,8 @@ There's a lot coming with this code base, I just have to actually write it all.
 - [ ] Window Element API
     - [ ] Buttons
     - [ ] Select
-        - [ ] Custom Select dropdowns
+        - [x] Custom Select dropdowns
+        - [ ] Dropdown animations
     - [ ] Text/Password
     - [ ] Etc.
 - [ ] GUI Editor
