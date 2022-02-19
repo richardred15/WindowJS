@@ -3,7 +3,7 @@ html {
     margin: 0;
     padding: 0;
     background-color: #fff;
-    font-family: sans-serif;
+    font-family: system-ui;
     width: 100vw;
     height: 100vh;
     background-size: cover;
@@ -52,7 +52,7 @@ html {
     left: 100px;
     width: 400px;
     height: 500px;
-    /*     border: 5px solid darkslategray; */
+    border: 1px solid #979797;
     /* padding: 5px;
     background-color: darkslateblue; */
     background-color: rgb(98, 98, 98);
@@ -62,7 +62,7 @@ html {
     transition: all 0.6s ease, opacity 0.8s ease-out;
     border-radius: 8px;
     overflow: hidden;
-
+    opacity: 0.95;
 
     -webkit-touch-callout: none;
     /* iOS Safari */
@@ -81,6 +81,7 @@ html {
 
 .windowJSWindow.focused {
     z-index: 10001;
+    opacity: 1;
 }
 
 .windowJSWindow.dragging {
@@ -89,6 +90,7 @@ html {
 
 .windowJSWindowBorder {
     background-color: var(--border-color);
+    opacity: 0;
     cursor: pointer;
 }
 
@@ -168,6 +170,7 @@ html {
     width: 195px !important;
     top: calc(100vh - 47px) !important;
     overflow: hidden !important;
+    background-color: rgb(80, 80, 80) !important;
 }
 
 .windowJSWindow.minimized .windowJSWindowBorder {
@@ -186,12 +189,13 @@ html {
     width: calc(100vw - 10px) !important;
     top: 0px !important;
     left: 0px !important;
+    background-color: rgb(80, 80, 80) !important;
 }
 
 .windowJSTitleBar {
     padding: 10px;
     color: white;
-    background-color: rgb(47, 47, 47);
+    background-color: rgb(80, 80, 80);
     box-shadow: 0 10px 50px -10px rgb(0 0 0);
     z-index: 1000000;
     grid-row: 2;
@@ -200,11 +204,19 @@ html {
     grid-template-columns: auto auto 100px;
     cursor: move;
     touch-action: none;
-    border-radius: 4px 4px 4px 4px;
+    border-radius: 4px 4px 0px 0px;
+    transition: background-color 0.1s ease;
+}
+
+.windowJSWindow.focused .windowJSTitleBar {
+    background-color: rgb(47, 47, 47);
 }
 
 .windowJSTitleBarTitle {
     display: inline-block;
+    overflow: hidden;
+    white-space: nowrap;
+    line-height: 26px;
 }
 
 .windowJSTitleBarControls {
@@ -246,23 +258,57 @@ html {
     grid-column: 2;
     grid-row: 3;
     border-radius: 0px 0px 8px 8px;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 40px;
+}
+
+.windowJSTextParagraph {
+    padding: 5px;
 }
 
 .windowJSSelectContainer {
     z-index: 1000;
     height: 38px;
+    position: relative;
 }
 
-.windowJSSelect {
-    height: 38px;
-    overflow: hidden;
-    transition: all 0.6s ease;
+.windowJSSelectContainer.open {
     z-index: 1001;
 }
 
-.windowJSSelect.open {
-    height: auto;
+.windowJSSelectContainer select {
+    display: none;
 }
+
+.windowJSSelectContainer.open .windowJSSelect {
+    max-height: 500px;
+}
+
+.windowJSSelect {
+    max-height: 38px;
+    overflow: hidden;
+    transition: all 0.2s ease-in;
+    z-index: 1001;
+}
+
+.windowJSContainer input {
+    display: inline-block;
+    border: 0px solid transparent;
+    width: 100%;
+    box-sizing: border-box;
+    color: white;
+    padding: 8px;
+    margin: 5px 0px;
+    background-color: #4b4b4b;
+}
+
+input[type="text"]:focus-visible {
+    outline: none;
+    background-color: #222222;
+}
+
+
 
 .windowJSSelectTitle::after {
     content: '▼';
@@ -280,6 +326,14 @@ html {
     font-size: 16px;
 }
 
+.windowJSSelect .windowJSSelectOption {
+    background-color: rgb(67, 67, 67);
+}
+
+.windowJSSelect .windowJSSelectOption:hover {
+    background-color: rgb(87, 87, 87);
+}
+
 .windowJSContent .windowJSButton {
     display: inline-block;
     background-color: rgb(124, 124, 124);
@@ -289,6 +343,7 @@ html {
     cursor: pointer;
     z-index: 1;
     height: 17px;
+    line-height: 17px;
     text-align: center;
     transition: all 0.6s ease;
 }
@@ -298,16 +353,16 @@ html {
 }
 
 .windowJSContainer {
-    display: grid;
     height: 100%;
 }
 
 .windowJSContainer.main {
-    grid-template-columns: 1fr;
-    grid-template-rows: 40px 1fr 41px;
+    /* grid-template-columns: 1fr;
+    grid-template-rows: 40px 1fr 41px; */
 }
 
 .windowJSContainer.footer {
+    display: grid;
+    direction: rtl;
     grid-template-columns: 1fr 1fr 1fr;
-    grid-row: 3;
 }

@@ -52,12 +52,12 @@ class WindowJS {
                         }
                         this.focusWindow(w);
                     }
-                } else if (window.minimized) {
+                } else if (window.minimized && window.isClicked(e.target)) {
                     window.toggleMinimized();
                 }
             }
             if (this.lastClickTime == 0) {
-                this.lastClickTime = Date.now();
+                //this.lastClickTime = Date.now();
             }
 
         });
@@ -104,6 +104,7 @@ class WindowJS {
                 this.selectedWindow = null;
             }
             if (Date.now() - this.lastClickTime < 300) {
+                //console.log(this.lastClickTime, Date.now() - this.lastClickTime);
                 for (let window of this.windows) {
                     if (!window.minimized && window.isTitleBarClick(e.target)) {
                         window.toggleMaximized();
@@ -111,7 +112,6 @@ class WindowJS {
                 }
             }
             this.lastClickTime = Date.now();
-
         });
     }
 
@@ -121,8 +121,16 @@ class WindowJS {
         newWindow.setTemplates(this.rawTemplateHTML, this.rawContentHTML);
         newWindow.buildTemplate();
         this.windows.push(newWindow);
+        this.focusWindow(this.windows.length - 1);
         this.nextWindowID++;
         return newWindow;
+    }
+
+    removeWindow(id) {
+        let index = parseInt(id) - 1001;
+        let window = this.windows[index];
+        document.body.removeChild(window.windowElement);
+        this.windows.splice(index, 1);
     }
 
     async init() {

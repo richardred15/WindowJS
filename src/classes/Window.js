@@ -1,6 +1,8 @@
 class Window {
     constructor(title = "WindowJS", x = 100, y = 100, width = 350, height = 400) {
+        this.built = false;
         this.title = title;
+        this.largeTitle = false;
         this.x = x;
         this.y = y;
         this.width = width;
@@ -58,6 +60,24 @@ class Window {
         }
     }
 
+    setTitle(title) {
+        if (this.built) {
+            this.title = title;
+            this.largeTitle = false;
+            let titleElement = this.titleBarElement.querySelector(".windowJSTitleBarTitle");
+            titleElement.innerHTML = title;
+            if (titleElement.scrollWidth > titleElement.clientWidth) {
+                this.largeTitle = true;
+                while (titleElement.scrollWidth > titleElement.clientWidth) {
+                    titleElement.innerHTML = titleElement.innerHTML.slice(0, titleElement.innerHTML.length - 1);
+                    titleElement.innerHTML = titleElement.innerHTML.trim();
+                }
+                titleElement.innerHTML = titleElement.innerHTML.slice(0, titleElement.innerHTML.length - 3);
+                titleElement.innerHTML += "...";
+            }
+        }
+    }
+
     updateLocation() {
         this.windowElement.style.top = this.y + "px";
         this.windowElement.style.left = this.x + "px";
@@ -66,6 +86,8 @@ class Window {
     updateSize() {
         this.windowElement.style.width = this.width + "px";
         this.windowElement.style.height = this.height + "px";
+        this.setTitle(this.title);
+        this.onresize();
     }
 
     onmove() {
@@ -91,11 +113,17 @@ class Window {
         this.windowElement = tempDiv.firstChild;
         this.titleBarElement = this.windowElement.getElementsByClassName("windowJSTitleBar")[0];
         this.body = this.windowElement.getElementsByClassName("windowJSContent")[0];
+        this.main = this.body.querySelector(".main");
         this.closeButton = this.windowElement.querySelector(".windowJSTitleBarControl.close");
         this.minimizeButton = this.windowElement.querySelector(".windowJSTitleBarControl.minimize");
+        this.closeButton = this.windowElement.querySelector(".windowJSTitleBarControl.close");
         this.maximizeButton = this.windowElement.querySelector(".windowJSTitleBarControl.maximize");
-
+        this.main.appendChild(buildSelect("potatoinfo1", potatoSelectOptions));
+        this.main.appendChild(buildSelect("potatoinfo2", potatoSelectOptions));
+        this.main.appendChild(buildSelect("potatoinfo3", potatoSelectOptions));
+        this.main.appendChild(buildSelect("potatoinfo4", potatoSelectOptions));
         this.attachListeners();
+        this.built = true;
     }
 
     setTemplates(rawTemplateHTML, rawContentHTML) {
@@ -109,12 +137,23 @@ class Window {
         let thisWindow = this;
         this.minimizeButton.addEventListener("click", (e) => {
             this.toggleMinimized();
-            //thisWindow.windowElement.toggleClass("minimized");
         });
         this.maximizeButton.addEventListener("click", (e) => {
             this.toggleMaximized();
-            //thisWindow.windowElement.toggleClass("maximized");
         });
+
+        this.closeButton.addEventListener("click", (e) => {
+            this.close();
+        });
+    }
+
+    close() {
+        this.onclose();
+        winjs.removeWindow(this.id);
+    }
+
+    onclose() {
+
     }
 
     toggleMinimized() {
@@ -150,13 +189,14 @@ class Window {
             content: content
         }
         this.rawHTML = this.parseTemplate(this.rawTemplateHTML, repl);
-
+        this.setTitle(this.title);
     }
 
     parseTemplate(text, repl) {
         for (let name in repl) {
             let val = repl[name];
-            text = text.replaceAll(`\${${name}}`, val);
+            let regex = new RegExp("\\$\\{" + name + "\\}", "g");
+            text = text.replace(regex, val);
         }
         return text;
     }
