@@ -307,7 +307,8 @@ html {
     background-color: #4b4b4b;
 }
 
-input[type="text"]:focus-visible {
+input[type="text"]:focus-visible,
+input[type="password"]:focus-visible {
     outline: none;
     background-color: #222222;
 }
