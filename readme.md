@@ -7,6 +7,8 @@
 
 https://richard.works/projects/Window.js/ - Testing Environment
 
+- [ ] Remove example code
+	- [ ] Create seperate demo website
 - [x] Window resizing
 - [ ] Window Element API (Custom handling and/or UI style)
     - [ ] Buttons
