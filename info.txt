@@ -1,0 +1,4 @@
+Window manager
+
+$latest=true
+$new=true
