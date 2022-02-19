@@ -145,12 +145,16 @@ class Window {
         this.minimizeButton = this.windowElement.querySelector(".windowJSTitleBarControl.minimize");
         this.closeButton = this.windowElement.querySelector(".windowJSTitleBarControl.close");
         this.maximizeButton = this.windowElement.querySelector(".windowJSTitleBarControl.maximize");
-        this.main.appendChild(buildSelect("potatoinfo1", potatoSelectOptions));
-        this.main.appendChild(buildSelect("potatoinfo2", potatoSelectOptions));
-        this.main.appendChild(buildSelect("potatoinfo3", potatoSelectOptions));
-        this.main.appendChild(buildSelect("potatoinfo4", potatoSelectOptions));
+        this.append(buildSelect("potatoinfo1", potatoSelectOptions));
+        this.append(buildSelect("potatoinfo2", potatoSelectOptions));
+        this.append(buildSelect("potatoinfo3", potatoSelectOptions));
+        this.append(buildSelect("potatoinfo4", potatoSelectOptions));
         this.attachListeners();
         this.built = true;
+    }
+
+    append(htmlElement) {
+        this.main.appendChild(htmlElement);
     }
 
     setTemplates(rawTemplateHTML, rawContentHTML) {
