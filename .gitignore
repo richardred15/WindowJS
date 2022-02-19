@@ -1,3 +1,6 @@
 .vscode/sftp.json
 package-lock.json
 node_modules
+info.txt
+icon.png
+Gruntfile.js
