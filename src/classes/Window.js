@@ -227,4 +227,8 @@ class Window {
         }
         return text;
     }
+
+    attach() {
+        document.body.appendChild(this.windowElement);
+    }
 }

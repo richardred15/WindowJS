@@ -6,10 +6,10 @@ window.onload = function () {
     winjs = new WindowJS();
     winjs.onload = function () {
         win = winjs.newWindow("Window One", 100, 100);
-        document.body.appendChild(win.windowElement);
+        win.attach();
 
         win2 = winjs.newWindow("Window Two", 200, 200);
-        document.body.appendChild(win2.windowElement);
+        win2.attach();
     }
 }
 
