@@ -9,7 +9,7 @@ https://richard.works/projects/Window.js/ - Testing Environment
 - [x] Window resizing
 - [ ] Window Element API
     - [ ] Buttons
-    - [ ] Select
+    - [x] Select
         - [x] Custom Select dropdowns
         - [x] Dropdown animations
     - [ ] Text/Password
