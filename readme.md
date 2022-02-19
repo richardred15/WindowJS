@@ -6,12 +6,12 @@ WindowJS is a desktop style Window generator in the web browser
 
 https://richard.works/projects/Window.js/ - Testing Environment
 
-- [ ] Window resizing
+- [x] Window resizing
 - [ ] Window Element API
     - [ ] Buttons
     - [ ] Select
         - [x] Custom Select dropdowns
-        - [ ] Dropdown animations
+        - [x] Dropdown animations
     - [ ] Text/Password
     - [ ] Etc.
 - [ ] GUI Editor

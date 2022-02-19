@@ -7,6 +7,12 @@ class Window {
         this.y = y;
         this.width = width;
         this.height = height;
+        this.minWidth = 280;
+        this.minHeight = 375;
+        this.lastLocation = {
+            x: x,
+            y: y
+        }
 
         this.rawHTML = "";
         this.rawContentHTML = "";
@@ -19,6 +25,8 @@ class Window {
         this.dragged = false;
         this.minimized = false;
         this.maximized = false;
+
+        this.sizeUpdateTimeout = 0;
     }
 
     dragStart() {
@@ -50,14 +58,13 @@ class Window {
     }
 
     setLocation(x, y) {
-        if (x >= 0 && x + this.width <= window.innerWidth) {
-            if (y >= 0 && y + this.height <= window.innerHeight) {
-                this.x = x;
-                this.y = y;
-                this.updateLocation();
-                this.onmove();
-            }
+        this.lastLocation = {
+            x: this.x,
+            y: this.y
         }
+        this.x = x;
+        this.y = y;
+        this.updateLocation();
     }
 
     setTitle(title) {
@@ -79,15 +86,35 @@ class Window {
     }
 
     updateLocation() {
-        this.windowElement.style.top = this.y + "px";
-        this.windowElement.style.left = this.x + "px";
+        if (this.x >= 0 && this.x + this.width <= window.innerWidth) {
+            if (this.y >= 0 && this.y + this.height <= window.innerHeight) {
+                this.windowElement.style.top = this.y + "px";
+                this.windowElement.style.left = this.x + "px";
+                this.onmove();
+            }
+        } else {
+            this.x = this.lastLocation.x;
+            this.y = this.lastLocation.y;
+        }
+
     }
 
     updateSize() {
+        if (this.width <= this.minWidth) {
+            this.width = this.minWidth;
+            return false;
+        }
+        if (this.height <= this.minHeight) {
+            this.height = this.minHeight;
+            return false;
+        }
         this.windowElement.style.width = this.width + "px";
         this.windowElement.style.height = this.height + "px";
-        this.setTitle(this.title);
-        this.onresize();
+        clearTimeout(this.sizeUpdateTimeout);
+        this.sizeUpdateTimeout = setTimeout(() => {
+            this.onresize()
+        }, 300);
+        return true;
     }
 
     onmove() {
@@ -95,7 +122,7 @@ class Window {
     }
 
     onresize() {
-
+        this.setTitle(this.title);
     }
 
     isClicked(target) {

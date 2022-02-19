@@ -11,9 +11,12 @@ function buildSelect(name = "testing", opts) {
     select.setAttribute('value', '');
     let title = document.createElement("div");
     title.className = "windowJSSelectTitle";
-    title.onclick = function () {
-        this.parentElement.setAttribute('value', '');
-        this.parentElement.parentElement.toggleClass('open');
+    title.onclick = function (e) {
+        let state = this.parentElement.parentElement.hasClass('open');
+        document.querySelectorAll(".windowJSSelectContainer.open").forEach((elm) => {
+            elm.removeClass("open");
+        });
+        if (!state) this.parentElement.parentElement.toggleClass('open');
     };
     title.innerHTML = "Select...";
     let inputElement = document.createElement("select");

@@ -11,6 +11,7 @@ class WindowJS {
         });
 
         this.dragging = false;
+        this.resizing = false;
         this.pointerdown = false;
         this.lastClickTime = 0;
         /**
@@ -35,7 +36,6 @@ class WindowJS {
 
     attachListeners() {
         window.addEventListener("pointerdown", (e) => {
-
             this.pointerdown = true;
             this.mousePosition = {
                 x: e.clientX,
@@ -48,7 +48,12 @@ class WindowJS {
                         if (window.isTitleBarClick(e.target)) {
                             this.selectedWindow = window;
                         } else {
-
+                            if (e.target.hasClass("windowJSWindowBorder")) {
+                                let which = e.target.className.replace("windowJSWindowBorder ", "").replace("corner ", "");
+                                this.resizing = which;
+                                this.selectedWindow = window;
+                                this.selectedWindow.windowElement.addClass("resizing");
+                            }
                         }
                         this.focusWindow(w);
                     }
@@ -65,26 +70,81 @@ class WindowJS {
         window.addEventListener("blur", (e) => {
             this.dragging = false;
             this.pointerdown = false;
-            if (this.selectedWindow) {
+            this.resizing = false;
+            if (this.selectedWindow && this.dragging) {
                 this.selectedWindow.dragStop();
-                this.selectedWindow = null;
             }
-
+            this.selectedWindow = null;
         });
 
         window.addEventListener("pointermove", (e) => {
-
-            if (this.pointerdown && !this.dragging) {
+            if (this.pointerdown && this.resizing) {
+                switch (this.resizing) {
+                    case "right":
+                        //this.selectedWindow.setLocationRelative(e.clientX - this.mousePosition.x, e.clientY - this.mousePosition.y);
+                        this.selectedWindow.width += e.clientX - this.mousePosition.x;
+                        this.selectedWindow.updateSize();
+                        break;
+                    case "left":
+                        this.selectedWindow.width -= e.clientX - this.mousePosition.x;
+                        this.selectedWindow.x += e.clientX - this.mousePosition.x;
+                        if (this.selectedWindow.updateSize()) {
+                            this.selectedWindow.updateLocation();
+                        }
+                        break;
+                    case "bottom":
+                        this.selectedWindow.height += e.clientY - this.mousePosition.y;
+                        this.selectedWindow.updateSize();
+                        break;
+                    case "top":
+                        this.selectedWindow.height -= e.clientY - this.mousePosition.y;
+                        this.selectedWindow.y += e.clientY - this.mousePosition.y;
+                        if (this.selectedWindow.updateSize()) {
+                            this.selectedWindow.updateLocation();
+                        }
+                        break;
+                    case "bottomright":
+                        this.selectedWindow.height += e.clientY - this.mousePosition.y;
+                        this.selectedWindow.width += e.clientX - this.mousePosition.x;
+                        this.selectedWindow.updateSize();
+                        break;
+                    case "bottomleft":
+                        this.selectedWindow.height += e.clientY - this.mousePosition.y;
+                        this.selectedWindow.width -= e.clientX - this.mousePosition.x;
+                        this.selectedWindow.x += e.clientX - this.mousePosition.x;
+                        if (this.selectedWindow.updateSize()) {
+                            this.selectedWindow.updateLocation();
+                        }
+                        break;
+                    case "topright":
+                        this.selectedWindow.height -= e.clientY - this.mousePosition.y;
+                        this.selectedWindow.y += e.clientY - this.mousePosition.y;
+                        this.selectedWindow.width += e.clientX - this.mousePosition.x;
+                        if (this.selectedWindow.updateSize()) {
+                            this.selectedWindow.updateLocation();
+                        }
+                        break;
+                    case "topleft":
+                        this.selectedWindow.height -= e.clientY - this.mousePosition.y;
+                        this.selectedWindow.y += e.clientY - this.mousePosition.y;
+                        this.selectedWindow.width -= e.clientX - this.mousePosition.x;
+                        this.selectedWindow.x += e.clientX - this.mousePosition.x;
+                        if (this.selectedWindow.updateSize()) {
+                            this.selectedWindow.updateLocation();
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            } else if (this.pointerdown && !this.dragging && !this.resizing) {
                 this.dragging = true;
                 if (this.selectedWindow && this.selectedWindow.maximized) {
                     this.selectedWindow.toggleMaximized();
-                    /* let diff = (window.innerWidth - e.clientX) / window.innerWidth;
-                    let x = e.clientX - (this.selectedWindow.width - (this.selectedWindow.width * diff));
-                    console.log(diff, x); */
                     this.selectedWindow.setLocation(e.clientX - (this.selectedWindow.width / 2), e.clientY - 15);
                 }
-            } else if (this.dragging) {
+            } else if (this.dragging && this.pointerdown && !this.resizing) {
                 if (this.selectedWindow) {
+                    console.log(e, "Drag start");
                     this.selectedWindow.dragStart();
                     this.selectedWindow.setLocationRelative(e.clientX - this.mousePosition.x, e.clientY - this.mousePosition.y);
                 }
@@ -93,14 +153,20 @@ class WindowJS {
                 x: e.clientX,
                 y: e.clientY
             };
-
+            return true;
         });
 
         window.addEventListener("pointerup", (e) => {
             this.dragging = false;
             this.pointerdown = false;
-            if (this.selectedWindow) {
+            if (this.resizing) {
+                this.selectedWindow.windowElement.removeClass("resizing");
+            }
+            this.resizing = false;
+            if (this.selectedWindow && this.dragging) {
                 this.selectedWindow.dragStop();
+            }
+            if (this.selectedWindow) {
                 this.selectedWindow = null;
             }
             if (Date.now() - this.lastClickTime < 300) {
