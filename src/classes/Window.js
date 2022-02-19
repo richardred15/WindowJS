@@ -174,11 +174,17 @@ class Window {
         });
     }
 
+    /**
+     * Removes window from DOM and memory
+     */
     close() {
         this.onclose();
         winjs.removeWindow(this.id);
     }
 
+    /**
+     * Event to be overridden, fires when window closes, before it's final removal
+     */
     onclose() {
 
     }
@@ -219,6 +225,12 @@ class Window {
         this.setTitle(this.title);
     }
 
+    /**
+     * Parse the HTML template data
+     * @param {String} text 
+     * @param {Object} repl 
+     * @returns {String}
+     */
     parseTemplate(text, repl) {
         for (let name in repl) {
             let val = repl[name];

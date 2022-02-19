@@ -1,6 +1,9 @@
 let potatoSelectOptions = {
     "potato": "Potato",
-    "noPotato": "Non-Potato"
+    "noPotato": "Non-Potato",
+    "cake": "Cake",
+    "spaghet": "Spaghetti",
+    "porn": "Porno :o"
 }
 
 function buildSelect(name = "testing", opts) {

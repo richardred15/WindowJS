@@ -144,7 +144,6 @@ class WindowJS {
                 }
             } else if (this.dragging && this.pointerdown && !this.resizing) {
                 if (this.selectedWindow) {
-                    console.log(e, "Drag start");
                     this.selectedWindow.dragStart();
                     this.selectedWindow.setLocationRelative(e.clientX - this.mousePosition.x, e.clientY - this.mousePosition.y);
                 }

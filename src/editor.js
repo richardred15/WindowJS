@@ -8,7 +8,6 @@ window.onload = function () {
     winjs = new WindowJS();
     winjs.onload = () => {
         previewWindow = winjs.newWindow("Testing");
-        console.log(previewWindow.rawHTML);
         previewElement.innerHTML = previewWindow.rawHTML;
     }
 }
