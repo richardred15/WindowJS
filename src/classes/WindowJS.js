@@ -4,8 +4,13 @@ class WindowJS {
          * @type {Window[]}
          */
         this.windows = [];
+        /**
+         * @type {Builder}
+         */
+        this.builder = new Builder();
         this.nextWindowID = 1001;
 
+        this.loaded = false;
         this.init().then(() => {
             this.onload()
         });
@@ -181,6 +186,7 @@ class WindowJS {
     }
 
     newWindow(title, x, y, width, height) {
+        //console.log(arguments);
         let newWindow = new Window(title, x, y, width, height);
         newWindow.id = this.nextWindowID;
         newWindow.setTemplates(this.rawTemplateHTML, this.rawContentHTML);
@@ -201,9 +207,45 @@ class WindowJS {
     async init() {
         this.rawContentHTML = await (await fetch("src/template/example.html")).text();
         this.rawTemplateHTML = await (await fetch("src/template/window.html")).text();
+        this.loaded = true;
     }
 
     onload() {
 
+    }
+
+    runBuildSteps(buildSteps) {
+        /**
+         * @type {Window}
+         */
+        let win;
+        for (let step of buildSteps) {
+            let action = step[0];
+            step.splice(0, 1);
+            switch (action) {
+                case "window":
+                    win = this.newWindow(...step);
+                    break;
+                case "select":
+                    let select = this.builder.buildSelect(...step);
+                    win.append(select);
+                    break;
+                case "text":
+                    let paragraph = this.builder.buildParagraph(...step);
+                    win.append(paragraph);
+                    break;
+                case "input":
+                    let input = this.builder.buildInput(...step);
+                    win.append(input);
+                    break;
+                case "button":
+                    let btn = this.builder.buildButton(...step);
+                    win.append(btn);
+                    break;
+                default:
+                    break;
+            }
+        }
+        return win;
     }
 }

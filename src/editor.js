@@ -1,45 +1,36 @@
+/**
+ * @type {WindowJS}
+ */
 let winjs;
-let previewWindow;
+let win;
 
-let previewElement; // = document.getElementById("previewElement");
+let buildSteps = [
+    ["window", "Window One", 100, 100],
+    ["select", "potato", {
+        "potato": "Potato",
+        "noPotato": "Non-Potato",
+        "cake": "Cake",
+        "spaghet": "Spaghetti",
+        "porn": "Porno :o"
+    }],
+    ["button", "Potato", () => {
+        alert('works')
+    }],
+    ["text", "Hello, how are you?"],
+    ["input", "text", "name", "You're a dick"],
+    ["text", "This will be bad"]
+]
+
 
 window.onload = function () {
-    previewElement = document.getElementById("previewElement");
     winjs = new WindowJS();
-    winjs.onload = () => {
-        previewWindow = winjs.newWindow("Testing");
-        previewElement.innerHTML = previewWindow.rawHTML;
+
+    winjs.onload = function () {
+        win = winjs.runBuildSteps(buildSteps);
+        update();
     }
 }
 
-
-Element.prototype.addClass = function (name) {
-    if (!this.hasClass(name)) {
-        this.className = (this.className + ' ' + name).trim();
-
-    }
-}
-
-Element.prototype.removeClass = function (name) {
-    let className = this.className;
-    if (this.hasClass(name)) {
-        className = className.replace(name, "").replace("  ", " ").trim();
-        this.className = className;
-    }
-}
-
-Element.prototype.hasClass = function (name) {
-    let classes = this.className.split(" ");
-    if (classes.indexOf(name) != -1) {
-        return true;
-    }
-    return false;
-}
-
-Element.prototype.toggleClass = function (name) {
-    if (this.hasClass(name)) {
-        this.removeClass(name);
-    } else {
-        this.addClass(name);
-    }
+function update() {
+    document.getElementById("staticViewer").innerHTML = win.html();
 }

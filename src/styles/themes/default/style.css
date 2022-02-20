@@ -264,7 +264,7 @@ html {
     border-radius: 0px 0px 8px 8px;
     display: grid;
     grid-template-columns: 1fr;
-    grid-template-rows: auto 40px;
+    grid-template-rows: auto auto;
 }
 
 .windowJSTextParagraph {

@@ -141,14 +141,11 @@ class Window {
         this.titleBarElement = this.windowElement.getElementsByClassName("windowJSTitleBar")[0];
         this.body = this.windowElement.getElementsByClassName("windowJSContent")[0];
         this.main = this.body.querySelector(".main");
+        this.footer = this.body.querySelector(".footer");
         this.closeButton = this.windowElement.querySelector(".windowJSTitleBarControl.close");
         this.minimizeButton = this.windowElement.querySelector(".windowJSTitleBarControl.minimize");
         this.closeButton = this.windowElement.querySelector(".windowJSTitleBarControl.close");
         this.maximizeButton = this.windowElement.querySelector(".windowJSTitleBarControl.maximize");
-        this.append(buildSelect("potatoinfo1", potatoSelectOptions));
-        this.append(buildSelect("potatoinfo2", potatoSelectOptions));
-        this.append(buildSelect("potatoinfo3", potatoSelectOptions));
-        this.append(buildSelect("potatoinfo4", potatoSelectOptions));
         this.attachListeners();
         this.built = true;
     }
@@ -229,6 +226,10 @@ class Window {
         this.setTitle(this.title);
     }
 
+    html() {
+        return this.windowElement.outerHTML;
+    }
+
     /**
      * Parse the HTML template data
      * @param {String} text 
@@ -244,7 +245,7 @@ class Window {
         return text;
     }
 
-    attach() {
-        document.body.appendChild(this.windowElement);
+    attach(elm = document.body) {
+        elm.appendChild(this.windowElement);
     }
 }

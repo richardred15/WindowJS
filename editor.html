@@ -6,10 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Window.js Editor</title>
-    <link rel="stylesheet" href="src/style.css" />
+    <link rel="stylesheet" href="src/styles/main.css" />
+    <link rel="stylesheet" href="src/styles/themes/default/style.css" />
     <link rel="stylesheet" href="src/editor.css" />
-    <script src="src/classes/Button.js"></script>
-    <script src="src/classes/Window.js"></script>
+    <!-- <script src="src/classes/Button.js">
+        </script>
+        <script src="src/classes/Window.js"></script> -->
+    <script src="windowjs.min.js"></script>
     <script src="src/editor.js"></script>
 </head>
 
@@ -17,7 +20,10 @@
     <div class="windowJSEditorContainer">
         <div class="windowJSEditor NavBar"></div>
         <div class="windowJSEditor Toolbar"></div>
-        <div class="windowJSEditor Preview" id="previewElement"></div>
+        <div class="windowJSEditor Preview" id="previewElement">
+            <!-- <iframe id="displayIFrame" src="iframe.html"></iframe> -->
+            <div class="windowJSEditor staticViewer" id="staticViewer"></div>
+        </div>
     </div>
 </body>
 

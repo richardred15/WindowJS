@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+
+<head>
+    <link rel='stylesheet' href='src/styles/themes/default/style.css' />
+    <script src='windowjs.min.js'></script>
+    <script>
+        let winjs;
+        let win;
+        window.onload = function () {
+            winjs = new WindowJS();
+        }
+
+        window.onmessage = function (message) {
+            console.log(message);
+            if (message.data && message.data.command) {
+                eval(message.data.command);
+            }
+        }
+    </script>
+</head>
+
+<body></body>
+
+</html>
