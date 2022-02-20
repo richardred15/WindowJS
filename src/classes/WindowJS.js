@@ -241,7 +241,6 @@ class WindowJS {
                 case "button":
                     let btn = this.builder.buildButton(...step);
                     win.append(btn);
-                    console.log();
                     break;
                 default:
                     break;
