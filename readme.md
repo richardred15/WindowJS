@@ -9,6 +9,8 @@ https://richard.works/projects/Window.js/ - Testing Environment
 
 - [ ] Remove example code
 	- [ ] Create seperate demo website
+- [ ] Build out theming
+	- [ ] Move essential CSS to core file
 - [ ] Individualize Events
 - [x] Window resizing
 - [ ] Window Element API (Custom handling and/or UI style)
