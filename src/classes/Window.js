@@ -1,4 +1,7 @@
-class Window {
+/**
+ * @typedef {WindowJSWindow}
+ */
+class WindowJSWindow {
     constructor(title = "WindowJS", x = 100, y = 100, width = 350, height = 400) {
         this.built = false;
         this.title = title;
@@ -7,8 +10,8 @@ class Window {
         this.y = y;
         this.width = width;
         this.height = height;
-        this.minWidth = 280;
-        this.minHeight = 375;
+        this.minWidth = 100;
+        this.minHeight = 100;
         this.lastLocation = {
             x: x,
             y: y
@@ -86,16 +89,16 @@ class Window {
     }
 
     updateLocation() {
-        if (this.x >= 0 && this.x + this.width <= window.innerWidth) {
-            if (this.y >= 0 && this.y + this.height <= window.innerHeight) {
-                this.windowElement.style.top = this.y + "px";
-                this.windowElement.style.left = this.x + "px";
-                this.onmove();
-            }
-        } else {
-            this.x = this.lastLocation.x;
-            this.y = this.lastLocation.y;
-        }
+        /* if (this.x >= 0 && this.x + this.width <= window.innerWidth) {
+            if (this.y >= 0 && this.y + this.height <= window.innerHeight) { */
+        this.windowElement.style.top = this.y + "px";
+        this.windowElement.style.left = this.x + "px";
+        this.onmove();
+        /*             }
+                } else {
+                    this.x = this.lastLocation.x;
+                    this.y = this.lastLocation.y;
+                } */
 
     }
 
@@ -140,7 +143,9 @@ class Window {
         this.windowElement = tempDiv.firstChild;
         this.titleBarElement = this.windowElement.getElementsByClassName("windowJSTitleBar")[0];
         this.body = this.windowElement.getElementsByClassName("windowJSContent")[0];
-        this.main = this.body.querySelector(".main");
+        this.main = document.createElement("div"); //this.body.querySelector(".main");
+        this.main.className = "windowJSContainer main";
+        this.body.appendChild(this.main);
         this.footer = this.body.querySelector(".footer");
         this.closeButton = this.windowElement.querySelector(".windowJSTitleBarControl.close");
         this.minimizeButton = this.windowElement.querySelector(".windowJSTitleBarControl.minimize");
@@ -244,7 +249,10 @@ class Window {
         }
         return text;
     }
-
+    /**
+     * Attaches the window to the DOM
+     * @param {HTMLElement} elm 
+     */
     attach(elm = document.body) {
         elm.appendChild(this.windowElement);
     }

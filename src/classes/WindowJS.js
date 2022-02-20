@@ -1,7 +1,11 @@
+/**
+ * The main WindowJS class
+ * @typedef {WindowJS}
+ */
 class WindowJS {
     constructor() {
         /**
-         * @type {Window[]}
+         * @type {WindowJSWindow[]}
          */
         this.windows = [];
         /**
@@ -20,7 +24,7 @@ class WindowJS {
         this.pointerdown = false;
         this.lastClickTime = 0;
         /**
-         * @type {Window}
+         * @type {WindowJSWindow}
          */
         this.selectedWindow = null;
 
@@ -32,6 +36,11 @@ class WindowJS {
         this.attachListeners();
     }
 
+    /**
+     * Brings a window into focus based on its index in the [windows] array
+     * - TODO: Make this based on ID
+     * @param {number} index 
+     */
     focusWindow(index) {
         for (let window of this.windows) {
             window.windowElement.removeClass("focused");
@@ -39,6 +48,9 @@ class WindowJS {
         this.windows[index].windowElement.addClass("focused");
     }
 
+    /**
+     * Attaches event listeners to the DOM for multiple functions
+     */
     attachListeners() {
         window.addEventListener("pointerdown", (e) => {
             this.pointerdown = true;
@@ -149,8 +161,12 @@ class WindowJS {
                 }
             } else if (this.dragging && this.pointerdown && !this.resizing) {
                 if (this.selectedWindow) {
-                    this.selectedWindow.dragStart();
-                    this.selectedWindow.setLocationRelative(e.clientX - this.mousePosition.x, e.clientY - this.mousePosition.y);
+                    if (e.clientX <= window.innerWidth && e.clientX > 0) {
+                        if (e.clientY <= window.innerHeight && e.clientY > 0) {
+                            this.selectedWindow.dragStart();
+                            this.selectedWindow.setLocationRelative(e.clientX - this.mousePosition.x, e.clientY - this.mousePosition.y);
+                        }
+                    }
                 }
             }
             this.mousePosition = {
@@ -161,12 +177,10 @@ class WindowJS {
         });
 
         window.addEventListener("pointerup", (e) => {
-            this.dragging = false;
-            this.pointerdown = false;
+
             if (this.resizing) {
                 this.selectedWindow.windowElement.removeClass("resizing");
             }
-            this.resizing = false;
             if (this.selectedWindow && this.dragging) {
                 this.selectedWindow.dragStop();
             }
@@ -181,13 +195,25 @@ class WindowJS {
                     }
                 }
             }
+            this.resizing = false;
+            this.dragging = false;
+            this.pointerdown = false;
             this.lastClickTime = Date.now();
         });
     }
 
+    /**
+     * 
+     * @param {string} title Title to be displayed on the window
+     * @param {number} x The x position of the window
+     * @param {number} y The y position of the window
+     * @param {number} width The width of the window
+     * @param {number} height The height of the window
+     * @returns {WindowJSWindow}
+     */
     newWindow(title, x, y, width, height) {
         //console.log(arguments);
-        let newWindow = new Window(title, x, y, width, height);
+        let newWindow = new WindowJSWindow(title, x, y, width, height);
         newWindow.id = this.nextWindowID;
         newWindow.setTemplates(this.rawTemplateHTML, this.rawContentHTML);
         newWindow.buildTemplate();
@@ -197,6 +223,10 @@ class WindowJS {
         return newWindow;
     }
 
+    /**
+     * Removes a window from memory and DOM from ID
+     * @param {number} id 
+     */
     removeWindow(id) {
         let index = parseInt(id) - 1001;
         let window = this.windows[index];
@@ -204,46 +234,80 @@ class WindowJS {
         this.windows.splice(index, 1);
     }
 
+    /**
+     * Do not call this, initializes WindowJS
+     */
     async init() {
         this.rawContentHTML = await (await fetch("src/template/example.html")).text();
         this.rawTemplateHTML = await (await fetch("src/template/window.html")).text();
         this.loaded = true;
     }
 
+    /**
+     * Onload event, to be overridden
+     */
     onload() {
 
     }
 
+    /**
+     * Builds and HTML element from options, do not use externally
+     * @param {string} type The element type desired
+     * @param {object} data The data to apply to the element
+     * @returns {HTMLElement}
+     */
+    buildElement(type, data) {
+        let out;
+        switch (type) {
+            case "select":
+                out = this.builder.buildSelect(...data);
+                break;
+            case "text":
+                out = this.builder.buildParagraph(...data);
+                break;
+            case "input":
+                out = this.builder.buildInput(...data);
+                break;
+            case "button":
+                console.log(data);
+                out = this.builder.buildButton(...data);
+                break;
+            case "container":
+                out = this.builder.buildContainer(this, ...data);
+                break;
+            case "form":
+                out = this.builder.buildForm(this, ...data);
+                break;
+            default:
+                return false;
+                break;
+        }
+
+        return out;
+    }
+
+    /**
+     * Iterates over WindowJS build data to generate a window
+     * @param {object} buildSteps 
+     * @returns 
+     */
     runBuildSteps(buildSteps) {
         /**
-         * @type {Window}
+         * @type {WindowJSWindow}
          */
         let win;
         for (let step of buildSteps) {
             let action = step[0];
             step.splice(0, 1);
-            switch (action) {
-                case "window":
-                    win = this.newWindow(...step);
-                    break;
-                case "select":
-                    let select = this.builder.buildSelect(...step);
-                    win.append(select);
-                    break;
-                case "text":
-                    let paragraph = this.builder.buildParagraph(...step);
-                    win.append(paragraph);
-                    break;
-                case "input":
-                    let input = this.builder.buildInput(...step);
-                    win.append(input);
-                    break;
-                case "button":
-                    let btn = this.builder.buildButton(...step);
-                    win.append(btn);
-                    break;
-                default:
-                    break;
+            if (action == "window") {
+                win = this.newWindow(...step);
+            } else if (action == "container") {
+                win.body.appendChild(this.buildElement(action, step));
+            } else {
+                let elm = this.buildElement(action, step);
+                if (elm) {
+                    win.append(elm);
+                }
             }
         }
         return win;
