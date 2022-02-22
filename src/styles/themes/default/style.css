@@ -174,7 +174,11 @@ html {
 }
 
 .windowJSWindow.minimized .windowJSTitleBarControl {
-    opacity: 0;
+    display: none;
+}
+
+.windowJSWindow.minimized .windowJSTitleBar {
+    grid-template-columns: 100%;
 }
 
 .windowJSWindowBorder.corner {
@@ -307,13 +311,29 @@ html {
     background-color: #4b4b4b;
 }
 
-input[type="text"]:focus-visible,
-input[type="password"]:focus-visible {
+.windowJSWindow input[type="checkbox"] {
+    width: auto;
+    margin: 2px;
+}
+
+.windowJSWindow input[type="text"]:focus-visible,
+.windowJSWindow input[type="password"]:focus-visible {
     outline: none;
     background-color: #222222;
 }
 
+.windowJSTextarea {
+    width: 100%;
+    border: none;
+    box-sizing: border-box;
+    padding: 10px;
+    background-color: #4b4b4b;
+    color: white;
+}
 
+.windowJSCheckboxContainer {
+    padding: 2px;
+}
 
 .windowJSSelectTitle::after {
     content: '▼';

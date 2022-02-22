@@ -7,18 +7,18 @@ class Builder {
 
     }
 
-    buildContainer(winjs, name, data) {
+    container(name) {
         let container = document.createElement("div");
         container.className = `windowJSContainer ${name}`;
-        for (let piece of data) {
+        /* for (let piece of data) {
             let type = piece[0];
             piece.splice(0, 1);
             container.appendChild(winjs.buildElement(type, piece));
-        }
+        } */
         return container;
     }
 
-    buildForm(winjs, action, data) {
+    form(winjs, action, data) {
         let form = document.createElement("form");
         form.className = 'windowJSForm';
         //form.setAttribute('submit', action);
@@ -37,7 +37,36 @@ class Builder {
         return form;
     }
 
-    buildButton(text = "Button", onclick = () => {}) {
+    textarea(value = "", name = "", onchange = () => {}) {
+        let textarea = document.createElement("textarea");
+        textarea.value = value;
+        textarea.className = "windowJSTextarea";
+        textarea.setAttribute("name", name);
+        textarea.onchange = function () {
+            onchange(textarea);
+        }
+        return textarea;
+    }
+
+    checkbox(name, text) {
+        let checkbox = document.createElement("input");
+        checkbox.setAttribute("type", "checkbox");
+        checkbox.setAttribute("name", name);
+        let label = document.createElement("label");
+        label.setAttribute("for", name);
+        label.innerHTML = text;
+        label.onclick = function () {
+            checkbox.checked = !checkbox.checked;
+        }
+        let div = document.createElement("div");
+        div.addClass("windowJSCheckboxContainer");
+        div.appendChild(checkbox);
+        div.appendChild(label);
+
+        return div;
+    }
+
+    button(text = "Button", onclick = () => {}) {
         let btn = document.createElement("div");
         btn.className = "windowJSButton";
         btn.innerHTML = text;
@@ -47,7 +76,7 @@ class Builder {
         return btn;
     }
 
-    buildInput(type, name, placeholder = "") {
+    input(type, name, placeholder = "") {
         let input = document.createElement("input");
         input.setAttribute("type", type);
         input.setAttribute("name", name);
@@ -55,14 +84,14 @@ class Builder {
         return input;
     }
 
-    buildParagraph(text) {
+    text(text) {
         let para = document.createElement("div");
         para.className = "windowJSTextParagraph";
         para.innerHTML = text;
         return para;
     }
 
-    buildSelect(name = "testing", opts) {
+    select(name = "testing", opts) {
         let container = document.createElement("div");
         container.className = "windowJSSelectContainer";
         let select = document.createElement("div");

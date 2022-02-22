@@ -13,12 +13,7 @@ class WindowJS {
          */
         this.builder = new Builder();
         this.nextWindowID = 1001;
-
         this.loaded = false;
-        this.init().then(() => {
-            this.onload()
-        });
-
         this.dragging = false;
         this.resizing = false;
         this.pointerdown = false;
@@ -32,8 +27,13 @@ class WindowJS {
             x: 0,
             y: 0
         };
-
-        this.attachListeners();
+        let winjs = this;
+        window.onload = function () {
+            winjs.attachListeners();
+            winjs.init().then(() => {
+                winjs.onload()
+            });
+        }
     }
 
     /**
@@ -98,13 +98,12 @@ class WindowJS {
             if (this.pointerdown && this.resizing) {
                 switch (this.resizing) {
                     case "right":
-                        //this.selectedWindow.setLocationRelative(e.clientX - this.mousePosition.x, e.clientY - this.mousePosition.y);
-                        this.selectedWindow.width += e.clientX - this.mousePosition.x;
+                        this.selectedWindow.setSize(this.selectedWindow.width + (e.clientX - this.mousePosition.x), this.selectedWindow.y);
                         this.selectedWindow.updateSize();
                         break;
+                        1
                     case "left":
-                        this.selectedWindow.width -= e.clientX - this.mousePosition.x;
-                        this.selectedWindow.x += e.clientX - this.mousePosition.x;
+                        this.selectedWindow.setSize(this.selectedWindow.width - (e.clientX - this.mousePosition.x), this.selectedWindow.y);
                         if (this.selectedWindow.updateSize()) {
                             this.selectedWindow.updateLocation();
                         }
@@ -260,27 +259,26 @@ class WindowJS {
         let out;
         switch (type) {
             case "select":
-                out = this.builder.buildSelect(...data);
-                break;
+            case "checkbox":
             case "text":
-                out = this.builder.buildParagraph(...data);
-                break;
             case "input":
-                out = this.builder.buildInput(...data);
-                break;
+            case "textarea":
             case "button":
-                console.log(data);
-                out = this.builder.buildButton(...data);
+                out = this.builder[type](...data);
                 break;
             case "container":
-                out = this.builder.buildContainer(this, ...data);
+                out = this.builder.container(data[0]);
+                for (let item of data[1]) {
+                    let type = item[0];
+                    item.splice(0, 1);
+                    out.appendChild(this.buildElement(type, ...item));
+                }
                 break;
             case "form":
-                out = this.builder.buildForm(this, ...data);
+                out = this.builder[type](this, ...data);
                 break;
             default:
                 return false;
-                break;
         }
 
         return out;
@@ -291,7 +289,7 @@ class WindowJS {
      * @param {object} buildSteps 
      * @returns 
      */
-    runBuildSteps(buildSteps) {
+    buildWindow(buildSteps) {
         /**
          * @type {WindowJSWindow}
          */

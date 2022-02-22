@@ -5,7 +5,7 @@
 ###### Generate classically designed window elements
 
 
-https://richard.works/projects/Window.js/ - Testing Environment
+https://richard.works/projects/WindowJS/ - Testing Environment
 
 - [ ] Remove example code
 	- [ ] Create seperate demo website
@@ -16,6 +16,8 @@ https://richard.works/projects/Window.js/ - Testing Environment
 - [ ] Window Element API (Custom handling and/or UI style)
     - [ ] Buttons
         - [ ] Form Compatibility
+	- [ ] Text Areas
+		- [ ] Form Compatability
     - [ ] Checkboxes
         - [ ] Form Compatibility
     - [x] Select

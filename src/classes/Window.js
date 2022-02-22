@@ -10,13 +10,13 @@ class WindowJSWindow {
         this.y = y;
         this.width = width;
         this.height = height;
-        this.minWidth = 100;
-        this.minHeight = 100;
+        this.minWidth = width;
+        this.minHeight = height;
         this.lastLocation = {
             x: x,
             y: y
         }
-
+        this.containers = {};
         this.rawHTML = "";
         this.rawContentHTML = "";
         this.rawTemplateHTML = "";
@@ -47,6 +47,13 @@ class WindowJSWindow {
     }
 
     setSize(width, height) {
+        if (width <= this.minWidth) {
+            width = this.minWidth;
+        }
+        if (height <= this.minHeight) {
+            height = this.minHeight;
+        }
+
         this.width = width;
         this.height = height;
         this.updateSize();
@@ -103,14 +110,6 @@ class WindowJSWindow {
     }
 
     updateSize() {
-        if (this.width <= this.minWidth) {
-            this.width = this.minWidth;
-            return false;
-        }
-        if (this.height <= this.minHeight) {
-            this.height = this.minHeight;
-            return false;
-        }
         this.windowElement.style.width = this.width + "px";
         this.windowElement.style.height = this.height + "px";
         clearTimeout(this.sizeUpdateTimeout);
@@ -136,16 +135,20 @@ class WindowJSWindow {
         return this.titleBarElement.contains(target);
     }
 
+    newContainer() {
+
+    }
+
     buildElement() {
         this.buildTemplate();
         let tempDiv = document.createElement("div");
         tempDiv.innerHTML = this.rawHTML;
         this.windowElement = tempDiv.firstChild;
         this.titleBarElement = this.windowElement.getElementsByClassName("windowJSTitleBar")[0];
-        this.body = this.windowElement.getElementsByClassName("windowJSContent")[0];
-        this.main = document.createElement("div"); //this.body.querySelector(".main");
-        this.main.className = "windowJSContainer main";
-        this.body.appendChild(this.main);
+        this.body = this.windowElement.querySelector(".windowJSContent");
+        this.containers.main = document.createElement("div"); //this.body.querySelector(".main");
+        this.containers.main.className = "windowJSContainer main";
+        this.body.appendChild(this.containers.main);
         this.footer = this.body.querySelector(".footer");
         this.closeButton = this.windowElement.querySelector(".windowJSTitleBarControl.close");
         this.minimizeButton = this.windowElement.querySelector(".windowJSTitleBarControl.minimize");
@@ -156,7 +159,8 @@ class WindowJSWindow {
     }
 
     append(htmlElement) {
-        this.main.appendChild(htmlElement);
+        this.containers.main.appendChild(htmlElement);
+        this.autoResize();
     }
 
     setTemplates(rawTemplateHTML, rawContentHTML) {
@@ -255,5 +259,20 @@ class WindowJSWindow {
      */
     attach(elm = document.body) {
         elm.appendChild(this.windowElement);
+        this.autoResize();
+    }
+
+    autoResize() {
+        if (this.windowElement.scrollHeight > this.windowElement.clientHeight) {
+            this.windowElement.addClass("resizing");
+            this.setSize(this.width, this.height + this.windowElement.scrollHeight - this.windowElement.clientHeight);
+            this.minHeight = this.windowElement.scrollHeight;
+        }
+        if (this.windowElement.scrollWidth > this.windowElement.clientWidth) {
+            this.windowElement.addClass("resizing");
+            this.setSize(this.width, this.width + this.windowElement.scrollWidth - this.windowElement.clientWidth);
+            this.minWidth = this.windowElement.scrollWidth;
+        }
+        this.windowElement.removeClass("resizing");
     }
 }
